@@ -1,18 +1,23 @@
 from flask import Flask, request, Response
-import json
 from passlib.hash import sha256_crypt
+from pymongo import MongoClient
+from middleware import setup_metrics
+import json
 import os
 import logging
-from pymongo import MongoClient
 import bson.json_util
 import random
 import jwt
+import prometheus_client
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
+setup_metrics(app)
+
+CONTENT_TYPE_LATEST = str('text/plain; version=0.0.4; charset=utf-8')
 
 client = MongoClient('userdb', 27017)
 db = client.userDb
@@ -88,5 +93,9 @@ def login():
       logger.info("Token authentication failed")
       response = Response(status=500)
       return response
+
+@app.route('/metrics')
+def metrics():
+    return Response(prometheus_client.generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 app.run(port=5002, debug=True, host='0.0.0.0')
