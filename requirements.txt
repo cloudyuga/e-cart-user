@@ -2,3 +2,4 @@ flask
 passlib
 pymongo
 pyjwt
+prometheus_client
