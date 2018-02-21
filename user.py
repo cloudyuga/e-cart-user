@@ -31,7 +31,7 @@ def initialize_tracer():
       config={
           'sampler': {'type': 'const', 'param': 1}
       },
-      service_name='user')
+      service_name='user-with-time-delay')
   return config.initialize_tracer()
 
 tracer = FlaskTracer(initialize_tracer)
