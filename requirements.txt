@@ -3,3 +3,5 @@ passlib
 pymongo
 pyjwt
 prometheus_client
+Jaeger-Client
+Flask-Opentracing
