@@ -12,6 +12,7 @@ import random
 import jwt
 import prometheus_client
 import opentracing
+import time
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -39,6 +40,8 @@ tracer = FlaskTracer(initialize_tracer)
 @tracer.trace()
 def register():
   parent_span = tracer.get_span()
+  with opentracing.tracer.start_span('Sleep', child_of=parent_span) as span:
+    time.sleep(5)
   logger.info("Entered User service to register")
   try:
    logger.info("Authenticating token")
